@@ -1,0 +1,23 @@
+{
+  "name": "node01",
+  "version": "1.0.0",
+  "description": "bo",
+  "main": "program.js",
+  "dependencies": {
+    "@types/uuid": "^8.3.4",
+    "connect-ensure-login": "^0.1.1",
+    "express": "^4.17.3",
+    "express-session": "^1.17.2",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.15",
+    "passport": "^0.5.2",
+    "passport-local": "^1.0.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
