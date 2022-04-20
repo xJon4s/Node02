@@ -11,12 +11,20 @@ function renderList(movies, user) {
     <h1>Filmliste</h1>
     <table>
       ${
-        user ? '<tr><th>Sie sind angemeldet als ' + user.username + '. Ihr Name lautet ' + user.firstname +" " + user.secondname + '</th></tr>'
-        : '<tr><th>Melden Sie sich an um ihre Filme hinzuzufügen</th></tr>'
+        user
+          ? "<tr><th>Sie sind angemeldet als " +
+            user.username +
+            ". Ihr Name lautet " +
+            user.firstname +
+            " " +
+            user.secondname +
+            "</th></tr>"
+          : "<tr><th>Melden Sie sich an um ihre Filme hinzuzufügen</th></tr>"
       }
       ${
-        user ? '<td><a href="/logout">Logout</a><a href="/movie/edit">Neuer Film</a></td>'
-        : '<td><a href="/login">Login</a></td>'
+        user
+          ? '<td><a href="/logout">Logout</a><a href="/movie/edit">Neuer Film</a><a href="/import">Importiere Filme</a></td>'
+          : '<td><a href="/login">Login</a></td>'
       }
     </table>
 
@@ -29,11 +37,12 @@ function renderList(movies, user) {
           <tr><td>${movie.id}</td>
           <td>${movie.title}</td>
           <td>${movie.year}</td>
-          <td>${(movie.published === 1)? "true":"false"}</td>
+          <td>${movie.published === 1 ? "true" : "false"}</td>
           <td>${movie.username}</td>
-          ${ ( user && user.username === movie.username) ? 
-          `<td><a href="/movie/remove/${movie.id}">Löschen</a></td><td><a href="/movie/edit/${movie.id}">Ändern</a></td></tr>`
-          : `<td><a href="/movie/view/${movie.id}"">Ansehen</a></td>`
+          ${
+            user && user.username === movie.username
+              ? `<td><a href="/movie/remove/${movie.id}">Löschen</a></td><td><a href="/movie/edit/${movie.id}">Ändern</a></td></tr>`
+              : `<td><a href="/movie/view/${movie.id}"">Ansehen</a></td>`
           }
           `
       )
@@ -56,12 +65,20 @@ function renderMovie(movie, user) {
     <h1>Filmliste</h1>
     <table>
       ${
-        user ? '<tr><th>Sie sind angemeldet als ' + user.username + '. Ihr Name lautet ' + user.firstname +" " + user.secondname + '</th></tr>'
-        : '<tr><th>Melden Sie sich an um ihre Filme hinzuzufügen</th></tr>'
+        user
+          ? "<tr><th>Sie sind angemeldet als " +
+            user.username +
+            ". Ihr Name lautet " +
+            user.firstname +
+            " " +
+            user.secondname +
+            "</th></tr>"
+          : "<tr><th>Melden Sie sich an um ihre Filme hinzuzufügen</th></tr>"
       }
       ${
-        user ? '<td><a href="/logout">Logout</a><a href="/movie/edit">Neuer Film</a></td>'
-        : '<td><a href="/login">Login</a></td>'
+        user
+          ? '<td><a href="/logout">Logout</a><a href="/movie/edit">Neuer Film</a></td>'
+          : '<td><a href="/login">Login</a></td>'
       }
     </table>
     <hr>
@@ -81,7 +98,9 @@ function renderMovie(movie, user) {
 
     <div>
     <label for="public">Öffentlich:</label>
-    <input type="checkbox" id="public" name="public" ${movie[0].published ? "checked" : ""}>
+    <input type="checkbox" id="public" name="public" ${
+      movie[0].published ? "checked" : ""
+    }>
     </div>
     <hr>
     <input type="submit" value="Speichern">
@@ -93,7 +112,7 @@ function renderMovie(movie, user) {
     `;
 }
 
-function renderMovieInfo(movie, user){
+function renderMovieInfo(movie, user) {
   return `<!DOCTYPE html>
   <html lang="en">
   <head>
@@ -104,12 +123,20 @@ function renderMovieInfo(movie, user){
   <body>
   <table>
   ${
-    user ? '<tr><th>Sie sind angemeldet als ' + user.username + '. Ihr Name lautet ' + user.firstname +" " + user.secondname + '</th></tr>'
-    : '<tr><th>Melden Sie sich an um ihre Filme hinzuzufügen</th></tr>'
+    user
+      ? "<tr><th>Sie sind angemeldet als " +
+        user.username +
+        ". Ihr Name lautet " +
+        user.firstname +
+        " " +
+        user.secondname +
+        "</th></tr>"
+      : "<tr><th>Melden Sie sich an um ihre Filme hinzuzufügen</th></tr>"
   }
   ${
-    user ? '<td><a href="/logout">Logout</a><a href="/movie/edit">Neuer Film</a></td>'
-    : '<td><a href="/login">Login</a></td>'
+    user
+      ? '<td><a href="/logout">Logout</a><a href="/movie/edit">Neuer Film</a></td>'
+      : '<td><a href="/login">Login</a></td>'
   }
 </table>
   <table>
@@ -120,7 +147,7 @@ function renderMovieInfo(movie, user){
     <td>Jahr:</td><td>${movie[0].year}</td>
   </tr>
   <tr>
-    <td>Öffentlich:</td><td>${movie[0].published? true : false}</td>
+    <td>Öffentlich:</td><td>${movie[0].published ? true : false}</td>
   </tr>
   <tr>
     <td>Besitzer:</td><td>${movie[0].username}</td>
@@ -132,4 +159,22 @@ function renderMovieInfo(movie, user){
   `;
 }
 
-module.exports = { renderList, renderMovie, renderMovieInfo };
+function renderFileImport() {
+  return `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <title>Filmliste</title>
+  <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <form action="/import " method="post" enctype="multipart/form-data">
+      <label for="importfile">Import-Datei:</label>
+      <input type="file" id="importfile" name="importfile">
+      <input type="submit" value="Importieren">
+    </form>
+  </body>
+  `;
+}
+
+module.exports = { renderList, renderMovie, renderMovieInfo, renderFileImport };

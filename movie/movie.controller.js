@@ -32,7 +32,7 @@ async function saveAction(request, response) {
     id: request.body.id,
     title: request.body.title,
     year: request.body.year,
-    public: (request.body.public === "on" ? true : false),
+    published: (request.body.public === "on" ? true : false),
     username: request.user.username,
     owner: request.user.id
   };
@@ -40,4 +40,27 @@ async function saveAction(request, response) {
   await movieModel.save(movie);
   response.redirect(request.baseUrl);
 }
-module.exports = { listAction, removeAction, editAction, saveAction, viewAction };
+
+async function importAction(request, response){
+  response.send(movieView.renderFileImport)
+}
+
+async function importDBAction(request, response){
+  try {
+    let movies;
+    try{
+      movies = JSON.parse((request.files.importfile.data.toString('ascii')));
+    }catch(error){
+      throw "Falsches Format";
+    }
+    //await movieModel.importMovies blablabla
+    response.redirect("/movie");
+  } catch (error) {
+    //response.send(movieView.renderError(error));
+  }
+
+
+
+
+}
+module.exports = { listAction, removeAction, editAction, saveAction, viewAction, importAction, importDBAction };

@@ -38,8 +38,13 @@ class Database {
 }
 
 function remove(id) {
-  data = data.filter((movie) => movie.id !== id);
+  const database = new Database(connectionProperties);
+  return database.queryClose(
+    `DELETE FROM movies WHERE id = ?`,
+    [id]
+  );
 }
+
 function get(id) {
   return data.find((movie) => movie.id === id);
 }
@@ -86,6 +91,7 @@ async function getAllDatabaseAsync(user) {
   }
 }
 
+
 async function saveToDatabase(movie) {
   if (movie.id === "-1") {
     movie.id = uuid();
@@ -94,6 +100,8 @@ async function saveToDatabase(movie) {
     data = data.map((item) => (item.id === movie.id ? movie : item));
   }
 }
+
+
 
 module.exports = {
   getAllDatabase,
