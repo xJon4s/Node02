@@ -49,7 +49,6 @@ async function getFromDatabase(username) {
     `SELECT * from users where users.username = ?`,
     [username]
   );
-  console.log(ret[0]);
   return ret[0];
 }
 

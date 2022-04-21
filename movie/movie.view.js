@@ -23,7 +23,7 @@ function renderList(movies, user) {
       }
       ${
         user
-          ? '<td><a href="/logout">Logout</a><a href="/movie/edit">Neuer Film</a><a href="/import">Importiere Filme</a></td>'
+          ? '<td><a href="/logout">Logout</a> <a href="/movie/edit">Neuer Film</a> <a href="/movie/import">Importiere Filme</a></td>'
           : '<td><a href="/login">Login</a></td>'
       }
     </table>
@@ -77,7 +77,7 @@ function renderMovie(movie, user) {
       }
       ${
         user
-          ? '<td><a href="/logout">Logout</a><a href="/movie/edit">Neuer Film</a></td>'
+          ? '<td><a href="/logout">Logout</a> <a href="/movie/edit">Neuer Film</a> <a href="/movie/import">Importiere Filme</a></td>'
           : '<td><a href="/login">Login</a></td>'
       }
     </table>
@@ -135,7 +135,7 @@ function renderMovieInfo(movie, user) {
   }
   ${
     user
-      ? '<td><a href="/logout">Logout</a><a href="/movie/edit">Neuer Film</a></td>'
+      ? '<td><a href="/logout">Logout</a> <a href="/movie/edit">Neuer Film</a> <a href="/movie/import">Importiere Filme</a></td>'
       : '<td><a href="/login">Login</a></td>'
   }
 </table>
@@ -168,7 +168,7 @@ function renderFileImport() {
   <link rel="stylesheet" href="/style.css">
   </head>
   <body>
-    <form action="/import " method="post" enctype="multipart/form-data">
+    <form action="/movie/import " method="post" enctype="multipart/form-data">
       <label for="importfile">Import-Datei:</label>
       <input type="file" id="importfile" name="importfile">
       <input type="submit" value="Importieren">
@@ -177,4 +177,21 @@ function renderFileImport() {
   `;
 }
 
-module.exports = { renderList, renderMovie, renderMovieInfo, renderFileImport };
+function renderMeldung(msg) {
+  return `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <title>Filmliste</title>
+  <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <h1>Meldung</h1>
+    <p>Import meldet:</p>
+    <p>${msg}</p>
+    <a href="/movie">Zurück</a>
+  </body>
+  `;
+}
+
+module.exports = { renderList, renderMovie, renderMovieInfo, renderFileImport,renderMeldung };

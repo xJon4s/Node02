@@ -39,19 +39,15 @@ class Database {
 
 function remove(id) {
   const database = new Database(connectionProperties);
-  return database.queryClose(
-    `DELETE FROM movies WHERE id = ?`,
-    [id]
-  );
+  return database.queryClose(`DELETE FROM movies WHERE id = ?`, [id]);
 }
 
 function get(id) {
   return data.find((movie) => movie.id === id);
 }
 async function save(movie) {
-  console.log(movie);
+  const database = new Database(connectionProperties);
   if (movie.id === "-1") {
-    const database = new Database(connectionProperties);
     return database.queryClose(
       `INSERT INTO movies (title, year, published, owner) VALUES (?, ?, ?, ?)`,
       [movie.title, movie.year, movie.published, movie.owner]
@@ -91,17 +87,42 @@ async function getAllDatabaseAsync(user) {
   }
 }
 
-
-async function saveToDatabase(movie) {
+/* async function saveToDatabase(movie) {
   if (movie.id === "-1") {
     movie.id = uuid();
     data.push(movie);
   } else {
     data = data.map((item) => (item.id === movie.id ? movie : item));
   }
+} */
+
+async function importMovies(movies, user) {
+  const sql1 = `START TRANSACTION;`;
+  const sql2 = `INSERT INTO movies (title, year, published, owner) VALUES (?, ?, FALSE, ?);`;
+  const sql3 = `COMMIT;`;
+  const sql4 = `ROLLBACK;`;
+  const sql5 = `SELECT * FROM movies WHERE title = ?`;
+  try {
+    const database = new Database(connectionProperties);
+    await database.query(sql1);
+
+    for (movie of movies) {
+      const furz = await database.query(sql5, [movie.title]);
+      if (furz[0]) {
+        throw `Film mit Titel ${movie.title} bereits vorhanden`;
+      }
+      await database.query(sql2, [movie.title, movie.year, user.id]);
+    }
+
+    await database.queryClose(sql3);
+    return Promise.resolve();
+  } catch (error) {
+    try {
+      await database.queryClose(sql4);
+    } catch (error) {}
+    return Promise.reject(error);
+  }
 }
-
-
 
 module.exports = {
   getAllDatabase,
@@ -110,5 +131,5 @@ module.exports = {
   save,
   getAllDatabaseAsync,
   getFromDatabase,
-  saveToDatabase,
+  importMovies,
 };
